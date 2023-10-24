@@ -11,14 +11,13 @@ class NetworkManagerApp:
         self.root.geometry('900x700')
         self.root.protocol('WM_DELETE_WINDOW', self.on_close)
         self.root.resizable(False, False)
-        
         self.root['background'] = BACKGROUND_COLOR
         self.sniffer = Sniffer()
     
     #need fix
     def on_close(self):
         if not self.sniffer.stop:
-            self.sniffer.stop_sniffing() 
+            self.sniffer.stop_sniffing()
         self.root.destroy()
     
     def create_return_button(self):

@@ -35,6 +35,12 @@ class Sniffer():
         self.filter=filter
         self.sniffing_has_stopped=True
     
+    @staticmethod
+    def _format_str(string: str):
+        if len(string)>18:
+            string=string[:18]
+        return string
+    
     def set_network_iface(self, network_iface: str):
         self.NETWORK_IFACE=network_iface
     def set_display(self, display: DisplayBoard):
@@ -49,12 +55,6 @@ class Sniffer():
     
     def _stop_thread(self, _):
         return self.stop
-    
-    @staticmethod
-    def _format_str(string: str):
-        if len(string)>18:
-            string=string[:18]
-        return string
     
     def packet_display_handler(self, packet):
         src=''
