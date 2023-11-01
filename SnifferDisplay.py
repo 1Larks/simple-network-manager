@@ -3,9 +3,9 @@ from Packet_Info import Packet_Info
 from utils import *
 
 class DisplayBoard():
-    def __init__(self, frame, packetList):
+    def __init__(self, frame):
             
-        self.packetList=packetList
+        self.packetList=[]
         self.frame=frame
         self.textboxes=[]
         
@@ -21,7 +21,10 @@ class DisplayBoard():
             self.create_textbox(col)
         
         self.bind_events()
-        
+    
+    def set_packetList(self, packetList):
+         self.packetList=packetList
+
     def create_textbox(self, index):
         textbox=Text(self.frame, background=TEXTBOX_BG, font=('imperial', 12), foreground='white',
                         yscrollcommand=self.scroll, state=constants.DISABLED)
@@ -49,6 +52,7 @@ class DisplayBoard():
         if self.textboxes[0].get('1.0', constants.END)=='':
             pass
         try:
+            print(self.packetList)
             packet=self.packetList[line_index]
             self.packet_info(packet, line_index)
         except:
@@ -70,22 +74,21 @@ class DisplayBoard():
         buttons_x=25
         
         
-        create_button(packet_page, text='Ethernet', x=buttons_x, y=buttons_y, width=100, height=40,
+        create_button(root=packet_page, text='Ethernet', x=buttons_x, y=buttons_y, width=100, height=40,
                              command=lambda packet=packet: self.print_layer_info(packet, packet.layer_index['DATA_LINK'], info_page))
         
-        layer3_button=Button(packet_page, text='Network layer', 
-                             command=lambda packet=packet: self.print_layer_info(packet, packet.layer_index['NETWORK'], info_page))
-        layer3_button.pack(padx=20, pady=20)
-        layer3_button.place(x=buttons_x+105, y=buttons_y, width=100, height=40)
+        create_button(root=packet_page, text='Network layer', 
+                             command=lambda packet=packet: self.print_layer_info(packet, packet.layer_index['NETWORK'], info_page), 
+                             x=buttons_x+105, y=buttons_y, width=100, height=40)
         
         if packet.layer_info[packet.layer_index['TRANSPORT']]:
-            create_button(packet_page, text='Transport layer', x=buttons_x+210, y=buttons_y, width=100, height=40,
+            create_button(root=packet_page, text='Transport layer', x=buttons_x+210, y=buttons_y, width=100, height=40,
                                  command=lambda packet=packet: self.print_layer_info(packet, packet.layer_index['TRANSPORT'], info_page))
             if packet.layer_info[packet.layer_index['APPLICATION']]:
-                create_button(packet_page, text='Application layer', x=buttons_x+315, y=buttons_y, width=100, height=40,
+                create_button(root=packet_page, text='Application layer', x=buttons_x+315, y=buttons_y, width=100, height=40,
                                  command=lambda packet=packet: self.print_layer_info(packet, packet.layer_index['APPLICATION'], info_page))
         elif packet.layer_info[packet.layer_index['ICMP']]:
-            create_button(packet_page, text='ICMP',x=buttons_x+210, y=buttons_y, width=100, height=40,
+            create_button(root=packet_page, text='ICMP',x=buttons_x+210, y=buttons_y, width=100, height=40,
                                  command=lambda packet=packet: self.print_layer_info(packet, packet.layer_index['ICMP'], info_page))
             
     

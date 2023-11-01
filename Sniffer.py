@@ -88,6 +88,7 @@ class Sniffer():
         self.stop=False
         self.sniffing_has_stopped=False
         self.packets=[]
+        self.display.set_packetList(self.packets)
         sniff_thread=threading.Thread(target=self._sniff)
         sniff_thread.start()
     

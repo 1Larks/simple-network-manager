@@ -4,6 +4,7 @@ from tkinter import END, NORMAL, DISABLED
 BACKGROUND_COLOR='#3A7575'
 TEXTBOX_BG='#5F9EA0'
 TEXTBOX_FONT=('imperial', 12)
+FONT_NAME='Arial'
 
 protocol_table={
     1: 'ICMP',

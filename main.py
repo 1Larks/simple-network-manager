@@ -22,7 +22,7 @@ class NetworkManagerApp:
     
     def create_return_button(self):
         return create_button(root=self.root, text='Return', command=None, x=10, y=10, width=75, height=50,
-                            font=('Impact', 14), background='#FAEDE3', foreground='#28282B')
+                            font=(FONT_NAME, 14), background='#FAEDE3', foreground='#28282B')
 
     def clear_root(self):
         for widget in self.root.winfo_children():
@@ -57,10 +57,10 @@ class NetworkManagerApp:
             self.sniffer.stop_sniffing()
         # Welcome label
         create_label(root=self.root, text='Welcome to Larks\' network managment system.\n\nPlease select a network interface.', 
-                                        font=('Impact', 24), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=50, y=50, width=800, height=125)
+                                        font=(FONT_NAME, 24), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=50, y=50, width=800, height=125)
         
         # Combo box for selecting the network interface
-        iface_CB=ttk.Combobox(self.root, state='readonly', values=self.sniffer.network_interfaces, font=('Impact', 16))
+        iface_CB=ttk.Combobox(self.root, state='readonly', values=self.sniffer.network_interfaces, font=(FONT_NAME, 16))
         iface_CB.pack()
         iface_CB.place(x=150, y=250, width=600, height=50)
         
@@ -74,8 +74,8 @@ class NetworkManagerApp:
                 self.sniffing_options()
             
         create_button(root=self.root, text='Continue', command=valid_interface, 
-                                font=('Impact', 14), background='#FAEDE3', foreground='#28282B', x=400, y=450, width=100, height=75)
-        create_button(root=self.root, text='Port scan', font=('Impact', 18), background='#FAEDE3', foreground='#28282B', 
+                                font=(FONT_NAME, 14), background='#FAEDE3', foreground='#28282B', x=400, y=450, width=100, height=75)
+        create_button(root=self.root, text='Port scan', font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', 
                            x=350, y=550, width=200, height=50, command=self.port_scan)
     
     def sniffing_options(self):
@@ -85,18 +85,18 @@ class NetworkManagerApp:
         return_button['command']=self.main_menu
         
         #Show the selected interface
-        create_label(root=self.root, text=f'The selected interface: {self.sniffer.NETWORK_IFACE}', font=('Impact', 24),
+        create_label(root=self.root, text=f'The selected interface: {self.sniffer.NETWORK_IFACE}', font=(FONT_NAME, 24),
                             background=BACKGROUND_COLOR, foreground='white', x=120, y=10, width=550, height=50, anchor=tk.W)
         
         #General sniffing button
-        create_button(root=self.root, text='Sniff all traffic',  font=('Impact', 18), background='#FAEDE3', foreground='#28282B',
+        create_button(root=self.root, text='Sniff all traffic',  font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B',
                            command=self.sniff_page, x=350, y=150, width=200, height=50)
         
         #Sniff different devices button
-        create_button(root=self.root, text='Sniff devices',  font=('Impact', 18), background='#FAEDE3', foreground='#28282B', 
+        create_button(root=self.root, text='Sniff devices',  font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', 
                            x=350, y=250, width=200, height=50, command=self.sniff_from_devices)
       
-    def sniff_page(self, filter='src host 192.168.1.24'):
+    def sniff_page(self, filter= None): # filter example: src host 192.168.1.24
         self.clear_root()
         
         #Init return button
@@ -107,7 +107,7 @@ class NetworkManagerApp:
         display_frame.pack(padx=50, pady=50)
         display_frame.place(x=40, y=132, width=800 , height=435)
         
-        display=DisplayBoard(display_frame, self.sniffer.packets)
+        display=DisplayBoard(display_frame)
         
         self.sniffer.set_network_iface(self.sniffer.NETWORK_IFACE)
         self.sniffer.set_display(display)
@@ -116,7 +116,7 @@ class NetworkManagerApp:
         
         #Toggle sniffing button
         toggle_sniffing_button=create_button(root=self.root, text='Start sniffing', command=None,
-                                font=('Impact', 18), background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
+                                font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
         toggle_sniffing_button['command']=lambda x=toggle_sniffing_button, y=display: self.toggle_sniffing_button_click(x, y)
     
     def sniff_from_devices(self):
@@ -141,19 +141,19 @@ class NetworkManagerApp:
         range_selection_frame.place(x=150, y=15, width=325, height=40)
         
         create_label(root=range_selection_frame, text='start port:', 
-                                        font=('Impact', 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=0, y=0, width=75, height=40)
+                                        font=(FONT_NAME, 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=0, y=0, width=75, height=40)
         range_selection1=tk.Entry(range_selection_frame, font=TEXTBOX_FONT)
         range_selection1.insert(tk.END, '1')
         range_selection1.place(x=75, y=0, width=75, height=40)
         
         create_label(root=range_selection_frame, text='end port:', 
-                                        font=('Impact', 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=150, y=0, width=75, height=40)
+                                        font=(FONT_NAME, 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=150, y=0, width=75, height=40)
         range_selection2=tk.Entry(range_selection_frame, font=TEXTBOX_FONT)
         range_selection2.insert(tk.END, '1024')
         range_selection2.place(x=225, y=0, width=75, height=40)
         
         toggle_scan_button=create_button(root=self.root, text='Start scanning', command=None,
-                                font=('Impact', 18), background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
+                                font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
         toggle_scan_button['command']=lambda: self.toggle_port_scanning_button_click(toggle_scan_button, results, int(range_selection1.get()), int(range_selection2.get()))
         
         
