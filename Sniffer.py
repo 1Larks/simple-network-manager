@@ -8,10 +8,8 @@ from utils import *
 
 NETWORK_IFACE=''
 
-# get a list of all IP addresses in the local machine
+#Get all the local IPs
 all_ip_addresses = [ip for ip in gethostbyname_ex(gethostname())[2] if not ip.startswith("127.")]
-
-# filter to find the internal ip address
 IP_ADDR = all_ip_addresses[0] if all_ip_addresses else None
 
 class Sniffer():
@@ -95,8 +93,7 @@ class Sniffer():
     def stop_sniffing(self):
         self.stop=True
         self.index=1
-       
-        
+           
     def get_network_entities(self):
         target_ip = "192.168.1.0/24"
         # Create an ARP request packet

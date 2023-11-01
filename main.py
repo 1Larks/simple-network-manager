@@ -40,14 +40,18 @@ class NetworkManagerApp:
             self.sniffer.stop_sniffing()
             button['text']='Start sniffing'
     
-    def toggle_port_scanning_button_click(self, button: tk.Button, textbox: tk.Text, start, end):
+    def toggle_port_scanning_button_click(self, button: tk.Button, textbox: tk.Text, start, end, rangeEntries):
         if self.sniffer.stop:
+            for entry in rangeEntries:
+                entry['state']=tk.DISABLED
             textbox['state']= tk.NORMAL
             textbox.delete('1.0', tk.END)
             textbox['state']= tk.DISABLED
             self.sniffer.port_syn_scan(start, end, textbox)
             button['text']='Stop scanning'
         else:
+            for entry in rangeEntries:
+                entry['state']=tk.NORMAL
             self.sniffer.stop_sniffing()
             button['text']='Start scanning'
     
@@ -140,28 +144,27 @@ class NetworkManagerApp:
         range_selection_frame.pack()
         range_selection_frame.place(x=150, y=15, width=325, height=40)
         
+        def digits_only(P):
+            return str.isdigit(P) or P == ""
+                
+        validate = (self.root.register(digits_only), '%P')
+
         create_label(root=range_selection_frame, text='start port:', 
                                         font=(FONT_NAME, 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=0, y=0, width=75, height=40)
-        range_selection1=tk.Entry(range_selection_frame, font=TEXTBOX_FONT)
+        range_selection1=tk.Entry(range_selection_frame, font=TEXTBOX_FONT, validatecommand=validate, validate='key')
         range_selection1.insert(tk.END, '1')
         range_selection1.place(x=75, y=0, width=75, height=40)
         
         create_label(root=range_selection_frame, text='end port:', 
                                         font=(FONT_NAME, 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=150, y=0, width=75, height=40)
-        range_selection2=tk.Entry(range_selection_frame, font=TEXTBOX_FONT)
+        range_selection2=tk.Entry(range_selection_frame, font=TEXTBOX_FONT, validate='key', validatecommand=validate)
         range_selection2.insert(tk.END, '1024')
         range_selection2.place(x=225, y=0, width=75, height=40)
         
         toggle_scan_button=create_button(root=self.root, text='Start scanning', command=None,
                                 font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
-        toggle_scan_button['command']=lambda: self.toggle_port_scanning_button_click(toggle_scan_button, results, int(range_selection1.get()), int(range_selection2.get()))
-        
-        
-        def callback(self, P):
-            if str.isdigit(P) or P == "":
-                return True
-            else:
-                return False
+        toggle_scan_button['command']=lambda: self.toggle_port_scanning_button_click(toggle_scan_button, results, int(range_selection1.get()), 
+                                                                                     int(range_selection2.get()), (range_selection1, range_selection2))
         
     def start(self):
         self.main_menu()
