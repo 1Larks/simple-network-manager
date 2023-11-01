@@ -1,4 +1,4 @@
-from tkinter import Label, Button, Text
+from tkinter import Label, Button, Text, Entry
 from tkinter import END, NORMAL, DISABLED
 
 BACKGROUND_COLOR='#3A7575'
@@ -43,3 +43,13 @@ def write_to_textbox(textbox: Text, text: str):
     textbox.insert(END, text)
     textbox['state']=DISABLED
 
+def create_entry(**kw):
+    entry=Entry(kw['root'], font=TEXTBOX_FONT)
+    if 'validatecommand' in kw:
+        entry['validatecommand']=kw['validatecommand']
+    if 'validate' in kw:
+        entry['validate']=kw['validate']
+    if 'text' in kw:
+        entry.insert(END, kw['text'])
+    entry.place(x=kw['x'], y=kw['y'], width=kw['width'], height=kw['height'])
+    return entry

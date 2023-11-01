@@ -38,7 +38,10 @@ class Sniffer():
         if len(string)>18:
             string=string[:18]
         return string
-    
+    @staticmethod
+    def get_machine_ip():
+        return IP_ADDR
+
     def set_network_iface(self, network_iface: str):
         self.NETWORK_IFACE=network_iface
     def set_display(self, display: DisplayBoard):
@@ -118,13 +121,13 @@ class Sniffer():
     
         return devices
     
-    def port_syn_scan(self, startport: int, endport: int, textbox: Text):
+    def port_syn_scan(self, startport: int, endport: int, textbox: Text, ip_addr: str):
         self.stop=False
         self.sniffing_has_stopped=False
-        scan_thread=threading.Thread(target=lambda sp=startport, ep=endport, tb=textbox: self._port_scan_thread(sp, ep, tb))
+        scan_thread=threading.Thread(target=lambda: self._port_scan_thread(startport, endport, ip_addr, textbox))
         scan_thread.start()
     
-    def _port_scan_thread(self, startport: int, endport: int, textbox: Text):
+    def _port_scan_thread(self, startport: int, endport: int, ip_addr, textbox: Text):
         print(IP_ADDR)
         for port in range(startport, endport):
             if not self.stop:

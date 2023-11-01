@@ -61,7 +61,8 @@ class NetworkManagerApp:
             self.sniffer.stop_sniffing()
         # Welcome label
         create_label(root=self.root, text='Welcome to Larks\' network managment system.\n\nPlease select a network interface.', 
-                                        font=(FONT_NAME, 24), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=50, y=50, width=800, height=125)
+                                        font=(FONT_NAME, 24), background=BACKGROUND_COLOR, foreground='#FAEDE3', 
+                                        x=50, y=50, width=800, height=125)
         
         # Combo box for selecting the network interface
         iface_CB=ttk.Combobox(self.root, state='readonly', values=self.sniffer.network_interfaces, font=(FONT_NAME, 16))
@@ -78,7 +79,8 @@ class NetworkManagerApp:
                 self.sniffing_options()
             
         create_button(root=self.root, text='Continue', command=valid_interface, 
-                                font=(FONT_NAME, 14), background='#FAEDE3', foreground='#28282B', x=400, y=450, width=100, height=75)
+                                font=(FONT_NAME, 14), background='#FAEDE3', foreground='#28282B', 
+                                x=400, y=450, width=100, height=75)
         create_button(root=self.root, text='Port scan', font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', 
                            x=350, y=550, width=200, height=50, command=self.port_scan)
     
@@ -121,7 +123,7 @@ class NetworkManagerApp:
         #Toggle sniffing button
         toggle_sniffing_button=create_button(root=self.root, text='Start sniffing', command=None,
                                 font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
-        toggle_sniffing_button['command']=lambda x=toggle_sniffing_button, y=display: self.toggle_sniffing_button_click(x, y)
+        toggle_sniffing_button['command']=lambda: self.toggle_sniffing_button_click(toggle_sniffing_button, display)
     
     def sniff_from_devices(self):
         self.clear_root()
@@ -136,13 +138,14 @@ class NetworkManagerApp:
     
     def port_scan(self):
         self.clear_root()
+        ip=self.sniffer.get_machine_ip()
         return_button=self.create_return_button()
         return_button['command']=self.main_menu
         results=create_results_textbox(root=self.root, x=90, y=132, width=700, height=435)
         
         range_selection_frame=tk.Frame(self.root, background=BACKGROUND_COLOR)
         range_selection_frame.pack()
-        range_selection_frame.place(x=150, y=15, width=325, height=40)
+        range_selection_frame.place(x=150, y=15, width=550, height=40)
         
         def digits_only(P):
             return str.isdigit(P) or P == ""
@@ -150,21 +153,32 @@ class NetworkManagerApp:
         validate = (self.root.register(digits_only), '%P')
 
         create_label(root=range_selection_frame, text='start port:', 
-                                        font=(FONT_NAME, 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=0, y=0, width=75, height=40)
-        range_selection1=tk.Entry(range_selection_frame, font=TEXTBOX_FONT, validatecommand=validate, validate='key')
-        range_selection1.insert(tk.END, '1')
-        range_selection1.place(x=75, y=0, width=75, height=40)
+                                        font=(FONT_NAME, 13), background=BACKGROUND_COLOR, 
+                                        foreground='#FAEDE3', x=0, y=0, width=75, height=40)
+        
+        range_selection1=create_entry(root=range_selection_frame, validatecommand=validate, 
+                                      validate='key', x=75, y=0, width=75, height=40, text='1')
         
         create_label(root=range_selection_frame, text='end port:', 
-                                        font=(FONT_NAME, 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', x=150, y=0, width=75, height=40)
-        range_selection2=tk.Entry(range_selection_frame, font=TEXTBOX_FONT, validate='key', validatecommand=validate)
-        range_selection2.insert(tk.END, '1024')
-        range_selection2.place(x=225, y=0, width=75, height=40)
+                                        font=(FONT_NAME, 13), background=BACKGROUND_COLOR, 
+                                        foreground='#FAEDE3', x=150, y=0, width=75, height=40)
         
-        toggle_scan_button=create_button(root=self.root, text='Start scanning', command=None,
-                                font=(FONT_NAME, 18), background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
-        toggle_scan_button['command']=lambda: self.toggle_port_scanning_button_click(toggle_scan_button, results, int(range_selection1.get()), 
-                                                                                     int(range_selection2.get()), (range_selection1, range_selection2))
+        range_selection2=create_entry(root=range_selection_frame, validate='key', validatecommand=validate,
+                                  x=225, y=0, width=75, height=40, text='1024')
+
+        toggle_scan_button=create_button(root=self.root, text='Start scanning', command=None, font=(FONT_NAME, 18), 
+                                         background='#FAEDE3', foreground='#28282B', x=350, y=600, width=200, height=50)
+        
+        toggle_scan_button['command']=lambda: self.toggle_port_scanning_button_click(toggle_scan_button, results, 
+                                                                                     int(range_selection1.get()), 
+                                                                                     int(range_selection2.get()), 
+                                                                                     (range_selection1, range_selection2))
+        
+        create_label(root=range_selection_frame, text='IP address', 
+                                        font=(FONT_NAME, 13), background=BACKGROUND_COLOR, foreground='#FAEDE3', 
+                                        x=300, y=0, width=75, height=40)
+        
+        ip_entry=create_entry(root=range_selection_frame, text=ip, x=375, y=0, width=75, height=40)
         
     def start(self):
         self.main_menu()
